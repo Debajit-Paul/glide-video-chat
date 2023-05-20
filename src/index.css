@@ -1,0 +1,24 @@
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.logo-image {
+  position: relative;
+  z-index: 999;
+}
+
+.more:focus-within .popover {
+  visibility: visible;
+}
+
+.more .popover button {
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+  background-color: white;
+  color: black;
+}
