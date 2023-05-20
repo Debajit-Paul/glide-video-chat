@@ -1,8 +1,11 @@
 import { useState, useRef } from "react";
 
-import { initializeApp } from "firebase/app";
-import { QuerySnapshot, getFirestore, snapshotEqual } from "firebase/firestore";
-import { firebaseConfig } from "./firebaseConfig";
+// import { initializeApp } from "firebase/app";
+// import { getFirestore } from "firebase/firestore";
+// import { collection, addDoc } from "firebase/firestore";
+import firebase from "firebase/app";
+import "firebase/firestore";
+import firebaseConfig from "./firebaseConfig.js";
 
 import { ImPhoneHangUp } from "react-icons/im";
 import { MdOutlineMoreVert } from "react-icons/md";
@@ -13,9 +16,14 @@ import "./App.css";
 
 //Initialize Firebase
 
-const firebaseApp = initializeApp(firebaseConfig);
+// const firebaseApp = initializeApp(firebaseConfig);
 
-const firestore = getFirestore(firebaseApp);
+// const firestore = getFirestore(firebaseApp);
+if (!firebase.apps.length) {
+  firebase.initializeApp(firebaseConfig);
+}
+
+const firestore = firebase.firestore();
 
 const servers = {
   iceServers: [
@@ -72,9 +80,9 @@ const Menu = ({ joinCode, setJoinCode, setPage }) => {
             <p className=" leading-6 text-[1.125rem] font-normal max-w-[25em] pb-[3em] text-[rgb(95,99,104)]">
               Developed a Peer-to-Peer video calling service built on webRTC for
               secure meetings, to make{" "}
-              <sapn className="text-[#1E51E2] font-bold text-[23px]">
+              <span className="text-[#1E51E2] font-bold text-[23px]">
                 Glide
-              </sapn>{" "}
+              </span>{" "}
               free and available for all.
             </p>
             <div className="sm:flex-row flex flex-col justify-start md:items-center items-start gap-6">
@@ -108,7 +116,7 @@ const Menu = ({ joinCode, setJoinCode, setPage }) => {
               Get a link that you can share
             </h3>
             <p className=" text-center md:w-[28rem] w-[15] leading-5 text-[.875rem] font-normal">
-              Click <snap className="font-semibold">New meeting</snap> to get a
+              Click <span className="font-semibold">New meeting</span> to get a
               link that you can send to people that you want to glide with
             </p>
           </div>
@@ -147,10 +155,9 @@ const Videos = ({ mode, callId, setPage }) => {
     setWebCamActive(true);
 
     if (mode == "create") {
-      const callDoc = firestore.collection("calls").doc();
+      const callDoc = await firestore.collection("calls").doc();
       const offerCandidates = callDoc.collection("offerCandidates");
       const answerCandidates = callDoc.collection("answerCandidates");
-
       setRoomId(callDoc.id);
 
       pc.onicecandidate = (event) => {
@@ -286,8 +293,11 @@ const Videos = ({ mode, callId, setPage }) => {
               onClick={() => {
                 navigator.clipboard.writeText(roomId);
               }}
+              className=" flex flex-col items-center justify-center"
             >
-              <MdContentCopy /> Copy joining code
+              <p>Copy joining code</p>
+              <MdContentCopy />
+              {roomId}
             </button>
           </div>
         </div>
