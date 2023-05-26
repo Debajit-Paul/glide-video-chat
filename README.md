@@ -15,5 +15,5 @@ Video calling platform using React.js and WebRTC for peer-to-peer connection
 * Netlify
 
 ## Deployment Notes
-
 Add a file name ```firebaseConfig.js``` inside src
+for your firebase config
