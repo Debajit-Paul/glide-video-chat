@@ -1,6 +1,6 @@
 # Glide
-![Fresh_idea-removebg-preview](https://github.com/Debajit-Paul/glide-video-chat/assets/62774980/e6acb967-d15c-468f-929b-1fd4eb3d1210)
 Video calling platform using React.js and WebRTC for peer-to-peer connection
+![Fresh_idea-removebg-preview](https://github.com/Debajit-Paul/glide-video-chat/assets/62774980/e6acb967-d15c-468f-929b-1fd4eb3d1210)
 
 ## ScreenShots
 ![g1](https://github.com/Debajit-Paul/glide-video-chat/assets/62774980/7393c5dc-963d-4ce2-984f-73a78d2136f7)
