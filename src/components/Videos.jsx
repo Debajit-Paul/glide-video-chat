@@ -1,15 +1,12 @@
 import { useState, useRef } from "react";
-
 import { ImPhoneHangUp } from "react-icons/im";
-import { MdOutlineMoreVert } from "react-icons/md";
-import { MdContentCopy } from "react-icons/md";
+import {MdOutlineMoreVert, MdContentCopy, MdOutlineScreenShare, MdOutlineStopScreenShare } from "react-icons/md";
 import {
   BsMic,
   BsMicMute,
   BsCameraVideo,
   BsCameraVideoOff,
 } from "react-icons/bs";
-
 import { pc, firestore } from "../App";
 
 export const Videos = ({ mode, callId, setPage }) => {
@@ -17,6 +14,7 @@ export const Videos = ({ mode, callId, setPage }) => {
   const [roomId, setRoomId] = useState(callId);
   const [videoToggle, setVideoToggle] = useState(true);
   const [micToggle, setMicToggle] = useState(true);
+  const [shareScreenToggle, setShareScreenToggle] =useState(true);
 
   const localRef = useRef();
   const remoteRef = useRef();
@@ -48,6 +46,7 @@ export const Videos = ({ mode, callId, setPage }) => {
     remoteRef.current.srcObject = remoteStream;
 
     setWebCamActive(true);
+    setShareScreenToggle(true);
 
     if (mode == "create") {
       // creating a DOC in firestore
@@ -145,6 +144,45 @@ export const Videos = ({ mode, callId, setPage }) => {
     };
   };
 
+  const shareScreen = async () => {
+      const constraints = { video: { cursor: 'always' }, audio: false };
+      const screenCaptureStream = await navigator.mediaDevices.getDisplayMedia(constraints);
+      const screenTrack = screenCaptureStream.getVideoTracks()[0]; 
+      setShareScreenToggle(false);  
+      localRef.current.srcObject= screenCaptureStream;
+      if (screenTrack) {
+        replaceTrack(screenTrack);
+     }
+  }
+
+  const stopScreenShare = async () => {
+    const localStream = await navigator.mediaDevices.getUserMedia({
+      video: true,
+    });
+    const streamTrack = localRef.current.srcObject?.getVideoTracks().find((track) => track.kind === "video");
+    
+    if(streamTrack){
+      streamTrack.stop();
+      replaceTrack(localStream.getVideoTracks()[0]);
+    }
+    setShareScreenToggle(true); 
+    localRef.current.srcObject= localStream;
+  }
+
+  const replaceTrack = (newTrack) => {
+    const sender = pc.getSenders().find(sender =>
+      sender.track.kind === newTrack.kind 
+    );
+  
+    if (!sender) {
+      console.warn('failed to find sender');
+  
+      return;
+    }
+  
+    sender.replaceTrack(newTrack);
+  }
+
   const hangUp = async () => {
     pc.close();
 
@@ -184,10 +222,10 @@ export const Videos = ({ mode, callId, setPage }) => {
         ref={remoteRef}
         autoPlay
         playsInline
-        className="absolute top-0 md:top-[3%] left-0 md:left-[5%] md:w-[70%] w-[100%] md:h-[80%] h-[87%] rounded-[8px] bg-[#3C4043] block object-cover"
+        className="absolute top-0 md:top-[3%] left-0 md:left-[5%] md:w-[70%] w-[100%] md:h-[80%] h-[87%] rounded-[8px] bg-[#3C4043] block object-fit"
       />
 
-      <div className=" absolute md:bottom-[4%] bottom-[3%] md:left-[calc(100vw/2-8rem)] left-[calc(100vw/2-8.5rem)] flex gap-6">
+      <div className=" absolute md:bottom-[4%] bottom-[3%] md:left-[calc(100vw/2-10rem)] left-[calc(100vw/2-10rem)] flex gap-6">
         <button
           title="Camera"
           onClick={async () => {
@@ -218,6 +256,20 @@ export const Videos = ({ mode, callId, setPage }) => {
         >
           {micToggle ? <BsMic /> : <BsMicMute />}
         </button>
+
+        {shareScreenToggle ? (<button
+          onClick={shareScreen}
+          title="Screenshare"
+            className="bg-white cursor-pointer w-[47px] h-[47px] rounded-full text-[30px] flex items-center justify-center"
+          >
+          <MdOutlineScreenShare/>
+          </button>):
+          (<button
+            onClick={stopScreenShare}
+            className="bg-[#e53b3b] text-white cursor-pointer w-[47px] h-[47px] rounded-full text-[30px] flex items-center justify-center"
+          >
+            <MdOutlineStopScreenShare/>
+          </button>)}
 
         <button
           title="HangUp"
