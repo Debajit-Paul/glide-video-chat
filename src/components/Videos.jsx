@@ -216,13 +216,13 @@ export const Videos = ({ mode, callId, setPage }) => {
         autoPlay
         playsInline
         muted
-        className={`absolute md:bottom-[17%] bottom-[17%] md:right-[3%] right-[3%] w-[35%] md:w-[20%] h-[24%] md:h-[30%] z-10 rounded-[8px] bg-[#4A4E51] block object-cover`}
+        className={`absolute md:bottom-[17%] bottom-[17%] md:right-[3%] right-[3%] w-[35%] md:w-[20%] h-[24%] md:h-[30%] z-10 rounded-[8px] bg-[#000000] block object-fit`}
       />
       <video
         ref={remoteRef}
         autoPlay
         playsInline
-        className="absolute top-0 md:top-[3%] left-0 md:left-[5%] md:w-[70%] w-[100%] md:h-[80%] h-[87%] rounded-[8px] bg-[#3C4043] block object-fit"
+        className="absolute top-0 md:top-[3%] left-0 md:left-[5%] md:w-[70%] w-[100%] md:h-[80%] h-[87%] rounded-[8px] bg-[#000000] block object-fit"
       />
 
       <div className=" absolute md:bottom-[4%] bottom-[3%] md:left-[calc(100vw/2-10rem)] left-[calc(100vw/2-10rem)] flex gap-6">
